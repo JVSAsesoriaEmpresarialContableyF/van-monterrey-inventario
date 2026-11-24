@@ -41,9 +41,13 @@
   var URL_APP = 'https://script.google.com/macros/s/AKfycbzywFmfIr1WVvzWxlWRn427DS5ZRZJ3Blg1vm8vyEflXcBOjdWqvQF7C67I4hnYiaj4/exec';
   var marco = document.getElementById('app');
   var carga = document.getElementById('carga');
-  // Pasa a la app los parámetros de esta página (p. ej. ?codigo=... para las etiquetas QR de la fase 3).
-  marco.src = URL_APP + (location.search || '');
-  document.getElementById('directo').href = URL_APP + (location.search || '');
+  // El QR de la etiqueta trae ?c=VAN-MTY-XXX-0000. Apps Script reserva el parámetro «c»,
+  // así que se traduce a ?codigo= (solo si tiene formato de código válido).
+  var params = new URLSearchParams(location.search);
+  var codigo = (params.get('c') || params.get('codigo') || '').trim().toUpperCase();
+  var destino = URL_APP + (/^VAN-MTY-[A-Z]{3}-\d{4,5}$/.test(codigo) ? '?codigo=' + encodeURIComponent(codigo) : '');
+  marco.src = destino;
+  document.getElementById('directo').href = destino;
   marco.addEventListener('load', function () { carga.classList.add('oculto'); });
   setTimeout(function () { carga.classList.add('lento'); }, 8000);
 </script>
