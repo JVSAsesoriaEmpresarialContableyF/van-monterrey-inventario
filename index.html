@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VAN Monterrey · Inventario</title>
+<meta name="description" content="Inventario de la iglesia Vida a las Naciones, sede Monterrey.">
+<meta name="theme-color" content="#2A436B">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root { --azul: #2A436B; --azul-oscuro: #1D3050; --blanco: #fff; }
+  html, body { margin: 0; height: 100%; background: var(--azul-oscuro); }
+  body { font-family: Montserrat, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--blanco); }
+  #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: var(--azul-oscuro); }
+  #carga {
+    position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+    background: linear-gradient(160deg, var(--azul) 0%, var(--azul-oscuro) 100%); transition: opacity .35s ease; z-index: 2; padding: 16px;
+  }
+  #carga img { width: min(260px, 70vw); height: auto; }
+  #carga p { margin: 0; font-size: 14px; opacity: .85; text-align: center; }
+  .giro { width: 28px; height: 28px; border: 3px solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: g 0.9s linear infinite; }
+  @keyframes g { to { transform: rotate(360deg); } }
+  #carga a { color: #fff; font-size: 13px; opacity: 0; transition: opacity .3s; }
+  #carga.lento a { opacity: .9; }
+  #carga.oculto { opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .giro { animation: none; } }
+</style>
+</head>
+<body>
+  <div id="carga" role="status" aria-live="polite">
+    <img src="logo.png" alt="Vida a las Naciones">
+    <div class="giro" aria-hidden="true"></div>
+    <p>Cargando el inventario de la sede Monterrey…</p>
+    <a id="directo" href="#" target="_top" rel="noopener">¿No carga? Ábrelo directamente</a>
+  </div>
+  <iframe id="app" title="VAN Monterrey · Inventario" allow="camera; clipboard-write; fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<script>
+  // Enlace de la app web publicada en Google Apps Script (implementación fija).
+  var URL_APP = 'https://script.google.com/macros/s/AKfycbzywFmfIr1WVvzWxlWRn427DS5ZRZJ3Blg1vm8vyEflXcBOjdWqvQF7C67I4hnYiaj4/exec';
+  var marco = document.getElementById('app');
+  var carga = document.getElementById('carga');
+  // Pasa a la app los parámetros de esta página (p. ej. ?codigo=... para las etiquetas QR de la fase 3).
+  marco.src = URL_APP + (location.search || '');
+  document.getElementById('directo').href = URL_APP + (location.search || '');
+  marco.addEventListener('load', function () { carga.classList.add('oculto'); });
+  setTimeout(function () { carga.classList.add('lento'); }, 8000);
+</script>
+</body>
+</html>
